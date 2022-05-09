@@ -1,5 +1,4 @@
-
-
+// setup element variables
 var formEl = document.querySelector("#button-form");
 var gameHeadingEl = document.querySelector("#heading");
 var gameContentEl = document.querySelector("#content");
@@ -23,54 +22,54 @@ btnAnswer4El = document.querySelector("#answer-4");
 
 // initiate counter
 var counter = 60;
+var selectedAnswer = 0;
 
 // setup question object/array
+var questionsArr = [
+    {
+        question: "In JavaScript, what does DOM refer to?",
+        answer1: "Document Object Manager",
+        answer2: "Vin Diesel",
+        answer3: "Dominic Toretto",
+        answer4: "Your mom's previous boyfriend",
+        correct: 1
+    },
 
-var questionsObj = {
-    q: "In JavaScript, what does DOM refer to?",
-    a: "Document Object Manager",
-    a1: "Vin Diesel",
-    a2: "Dominic Toretto",
-    a3: "Your mom's previous boyfriend"
-}
+    {
+        question: "Commonly used data types do NOT include:",
+        answer1: "strings",
+        answer2: "booleans",
+        answer3: "alerts",
+        answer4: "numbers",
+        correct: 3
+    },
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    {
+        question: "Which is the correct 'for' statement?",
+        answer1: "for variable = 'value' { do something }",
+        answer2: "for (variable === 'value') { do something };",
+        answer3: "for (variable == 'value') ( do something )",
+        answer4: "for variable === value | do something",
+        correct: 2
+    }
 
 
-
-
-
+];
 
 
 
 // start of JavaScript functions
 
 var startGame = function() {
+
     setTimer();
+
 }
 
 
 
 var displayTimer = function() {
+
     if (counter >= 0) {
         gameTimerEl.textContent = "Timer: " + counter;
         counter--;    
@@ -78,84 +77,93 @@ var displayTimer = function() {
         alert("you lost")
         clearInterval(intervalId);
     }
+
 }
 
 
 
 var setTimer = function() {
-    
-        
+            
         intervalId = setInterval(() => {
             displayTimer();
-        }, 250);
-        displayQuestion();
+        }, 1000);
+        
+        displayQuestion();      
 
 }
 
 
 
 var buttonFormHandler = function(event) {
+
     event.preventDefault();
-    // debugger;
-    var buttonForm = document.querySelector(".form");
-    buttonForm.addEventListener("click", function(event) {
-        
-        var element = event.target;
-
-        if (element.matches(".button")) {
-            var buttonAnswer = element.getAttribute("data-answer");
-            alert("buttonAnswer: " + buttonAnswer); 
-        }   
-
-        // this kinda works, but it requries an initial click that doesn't do anything, then it displays the alert the number of times the button is clicked.
-
-
-    });
+    // console.log(event);
     
-    // Code below works
-    // var answerButton = document.querySelector("#button-form");
-    // alert("Answer: " + answerButton.dataset.answer);
+
+    selectedAnswer = event.target.dataset.answer;
+    
+    if (selectedAnswer == questionsArr[i].correct) {
+        resultEl.textContent = "Correct!";
+        gameResultEl.appendChild(resultEl);
+        
+    } else {
+        resultEl.textContent = "Wrong!";
+        gameResultEl.appendChild(resultEl);
+        
+    }
+    
 }
 
 
 
 var clearContent = function() {
+
     contentEl.innerHTML = "";
-    btnAnswer1El.style.display = "none";
-    btnAnswer2El.style.display = "none";
-    btnAnswer3El.style.display = "none";
-    btnAnswer4El.style.display = "none";
+    // btnAnswer1El.style.display = "none";
+    // btnAnswer2El.style.display = "none";
+    // btnAnswer3El.style.display = "none";
+    // btnAnswer4El.style.display = "none";
 
     btnStartQuizEl.style.display = "none";
+
 }
 
 
 
-var displayQuestion = function() {
-
-    // clear contentEl if any
-    clearContent();
-
-    // setup question 
-    headerEl.innerHTML = questionsObj.q;
-
-    // setup/display button answers
+var displayQuestion = function(questionIndex) {
     
-    btnAnswer1El.innerHTML = questionsObj.a1;
-    btnAnswer1El.style.display = "block";
+        
+        console.log("Question Index: " + questionIndex);
+        // clear contentEl if any
+        clearContent();
 
+
+        while (selectedAnswer = 0) {
+        // setup question 
+        headerEl.innerHTML = questionsArr[i].question;
+
+        // setup/display button answers
+        
+        btnAnswer1El.innerHTML = questionsArr[i].answer1;
+        btnAnswer1El.style.display = "block";
+        btnAnswer1El.addEventListener("click", buttonFormHandler);
+
+        
+        btnAnswer2El.innerHTML = questionsArr[i].answer2;
+        btnAnswer2El.style.display = "block";
+        btnAnswer2El.addEventListener("click", buttonFormHandler);
+
+        
+        btnAnswer3El.innerHTML = questionsArr[i].answer3;
+        btnAnswer3El.style.display = "block";
+        btnAnswer3El.addEventListener("click", buttonFormHandler);
+
+        
+        btnAnswer4El.innerHTML = questionsArr[i].answer4;
+        btnAnswer4El.style.display = "block";
+        btnAnswer4El.addEventListener("click", buttonFormHandler);
+    }
     
-    btnAnswer2El.innerHTML = questionsObj.a2;
-    btnAnswer2El.style.display = "block";
-
-    
-    btnAnswer3El.innerHTML = questionsObj.a;
-    btnAnswer3El.style.display = "block";
-
-    
-    btnAnswer4El.innerHTML = questionsObj.a3;
-    btnAnswer4El.style.display = "block";
-
 }
 
 
@@ -171,12 +179,9 @@ var viewHighScores = function() {
     gameHeadingEl.appendChild(headerEl);
 
     // content assignment
-    
     var highscore = JSON.parse(localStorage.getItem("highscore"));
     contentEl.innerHTML = highscore.initials + ": " + highscore.score;
     gameContentEl.appendChild(contentEl);
-
-    
 
     // result assignment
     btnStartQuizEl.style.display = "none";
@@ -201,14 +206,10 @@ var welcomeScreen = function() {
     headerEl.textContent = "Coding Quiz Challenge";
     headerEl.style.fontWeight = "bold";
     gameHeadingEl.appendChild(headerEl);
-
-    
+   
     contentEl.textContent = "Try to answer the following code related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds!";
     gameContentEl.appendChild(contentEl);
 
-    
-
-    
     resultEl.className = "results-welcome";
     gameResultEl.appendChild(resultEl);
     gameTimerEl.textContent = "Timer: 60";
@@ -219,20 +220,21 @@ var welcomeScreen = function() {
 
 // start of JavaScript non-function code
 
+
 // listen for Start Quiz button click
 btnStartQuizEl.addEventListener("click", startGame);
+
 
 // listen for view high scores click
 btnViewHighScoresEl.addEventListener("click", viewHighScores);
 
+
 // listen for clear high scores click
 btnClearHighScoresEl.addEventListener("click", clearHighScores);
 
+
 // listen for go back button click
 btnGoBackEl.addEventListener("click", welcomeScreen);
-
-// user form event button click thingy here to evaluate the answer button click
-formEl.addEventListener("click", buttonFormHandler);
 
 
 
