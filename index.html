@@ -12,11 +12,11 @@
 
         <header>
             <div id="high-score" class="high-score">
-                <p>view high scores</p>
+                <p id="btn-view-high-scores">view high scores</p>
             </div>
 
-            <div id="game-timer" class="game=timer">
-                <p>game timer</p>
+            <div class="game=timer">
+                <p id="game-timer"></p>
             </div>
         </header>
 
@@ -26,11 +26,18 @@
             </section>
 
             <section id="content" class="content">
-                
+                <form class="form" id="button-form" data-answer="fuckme">
+                    <button id="answer-1" class="button" type="submit" data-answer="1"></button>
+                    <button id="answer-2" class="button" type="submit" data-answer="2"></button>
+                    <button id="answer-3" class="button" type="submit" data-answer="3"></button>
+                    <button id="answer-4" class="button" type="submit" data-answer="4"></button>
+                </form>
             </section>
 
             <section id="result" class="result">
-
+                <button id="btn-start-quiz">Start Quiz</button>
+                <button id="btn-go-back">go back</button>
+                <button id="btn-clear-high-scores">clear high score</button>
             </section>
         </div>
 
