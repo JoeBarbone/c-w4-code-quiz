@@ -9,6 +9,10 @@ var btnViewHighScoresEl = document.querySelector("#btn-view-high-scores");
 var btnGoBackEl = document.querySelector("#btn-go-back");
 var gameTimerEl = document.querySelector("#game-timer");
 
+// highscore elements
+var btnSaveHighScoreEl = document.querySelector("#submit-highscore");
+var initialsInputEl = document.querySelector("#initials");
+
 // set section element creattion
 var headerEl = document.createElement("div");
 var contentEl = document.createElement("div");
@@ -20,20 +24,16 @@ btnAnswer2El = document.querySelector("#answer-2");
 btnAnswer3El = document.querySelector("#answer-3");
 btnAnswer4El = document.querySelector("#answer-4");
 
-// initiate counter
+// initiate counters
 var counter = 60;
-var selectedAnswer = 0;
+selectedAnswer = 0;
+var i = 0;
+var WrongAnswers = 0;
+var gameScore = 0;
+
 
 // setup question object/array
 var questionsArr = [
-    {
-        question: "In JavaScript, what does DOM refer to?",
-        answer1: "Document Object Manager",
-        answer2: "Vin Diesel",
-        answer3: "Dominic Toretto",
-        answer4: "Your mom's previous boyfriend",
-        correct: 1
-    },
 
     {
         question: "Commonly used data types do NOT include:",
@@ -45,14 +45,40 @@ var questionsArr = [
     },
 
     {
-        question: "Which is the correct 'for' statement?",
-        answer1: "for variable = 'value' { do something }",
-        answer2: "for (variable === 'value') { do something };",
-        answer3: "for (variable == 'value') ( do something )",
-        answer4: "for variable === value | do something",
-        correct: 2
-    }
+        question: "The condition in an if / else statement is enclosed with: ",
+        answer1: "quotes",
+        answer2: "curly brackets",
+        answer3: "parenthesis",
+        answer4: "square brackets",
+        correct: 3
+    },
 
+    {
+        question: "Arrays in JavaScript can be used to store: ",
+        answer1: "numbers and strings",
+        answer2: "other arrays",
+        answer3: "booleans",
+        answer4: "all of the above",
+        correct: 4
+    },
+
+    {
+        question: "String values must be enclosed within ______ when being assigned to variables.",
+        answer1: "commas",
+        answer2: "curly brackets",
+        answer3: "quotes",
+        answer4: "parenthesis",
+        correct: 3
+    },
+
+    {
+        question: "A very useful tool used during development and debugging for printing content to the debugger is: ",
+        answer1: "JavaScript",
+        answer2: "terminal/bash",
+        answer3: "for loops",
+        answer4: "console.log",
+        correct: 4
+    }
 
 ];
 
@@ -61,7 +87,7 @@ var questionsArr = [
 // start of JavaScript functions
 
 var startGame = function() {
-
+    // resetHighScore();
     setTimer();
 
 }
@@ -74,8 +100,10 @@ var displayTimer = function() {
         gameTimerEl.textContent = "Timer: " + counter;
         counter--;    
     } else {
-        alert("you lost")
+        // alert("you lost")
         clearInterval(intervalId);
+        clearContent();
+        endGame();
     }
 
 }
@@ -99,7 +127,6 @@ var buttonFormHandler = function(event) {
     event.preventDefault();
     // console.log(event);
     
-
     selectedAnswer = event.target.dataset.answer;
     
     if (selectedAnswer == questionsArr[i].correct) {
@@ -109,38 +136,46 @@ var buttonFormHandler = function(event) {
     } else {
         resultEl.textContent = "Wrong!";
         gameResultEl.appendChild(resultEl);
-        
+        WrongAnswers = WrongAnswers + 1;
     }
-    
+
+    if (i < questionsArr.length - 1) {
+        i++;
+        displayQuestion();
+    } else {
+        clearContent();
+        clearInterval(intervalId);
+        endGame();
+    }
+
 }
 
 
 
 var clearContent = function() {
 
+    //headerEl.innerHTML = "";
     contentEl.innerHTML = "";
-    // btnAnswer1El.style.display = "none";
-    // btnAnswer2El.style.display = "none";
-    // btnAnswer3El.style.display = "none";
-    // btnAnswer4El.style.display = "none";
-
+    //resultEl.innerHTML = "";
+    btnAnswer1El.style.display = "none";
+    btnAnswer2El.style.display = "none";
+    btnAnswer3El.style.display = "none";
+    btnAnswer4El.style.display = "none";
     btnStartQuizEl.style.display = "none";
+    initialsInputEl.style.display = "none";
+    btnSaveHighScoreEl.style.display = "none";
 
 }
 
 
 
-var displayQuestion = function(questionIndex) {
+var displayQuestion = function() {
     
-        
-        console.log("Question Index: " + questionIndex);
         // clear contentEl if any
         clearContent();
-
-
-        while (selectedAnswer = 0) {
+        
         // setup question 
-        headerEl.innerHTML = questionsArr[i].question;
+        headerEl.innerHTML = ((i+1) + " of " + questionsArr.length + ": " + questionsArr[i].question);
 
         // setup/display button answers
         
@@ -162,7 +197,27 @@ var displayQuestion = function(questionIndex) {
         btnAnswer4El.innerHTML = questionsArr[i].answer4;
         btnAnswer4El.style.display = "block";
         btnAnswer4El.addEventListener("click", buttonFormHandler);
+    
+}
+
+
+
+var endGame = function() {
+    
+    var currentHighscore = JSON.parse(localStorage.getItem("highscore"));
+    gameScore = counter - (WrongAnswers*10);
+
+    if (currentHighscore === null || gameScore > currentHighscore.score) {
+        initialsInputEl.style.display = "inline";
+        btnSaveHighScoreEl.style.display = "inline";
+    } else {
+        btnGoBackEl.style.display = "block";
     }
+
+    headerEl.innerHTML = "Quiz Results";
+    // contentEl.innerHTML = "Remaining Time: " + counter + "<br />" + "Penalty Seconds: " + (WrongAnswers*10) + "<br />" + "Total score: " + (counter - (WrongAnswers*10) + "<br />" + "<input id='initials' placeholder='enter initials' /><button id='submit-highscore' class='button-highscore'>Submit</button>"); 
+    contentEl.innerHTML = "Remaining Time: " + (counter + 1) + "<br />" + "Penalty Seconds: " + (WrongAnswers*10) + "<br />" + "Total score: " + ((counter + 1) - (WrongAnswers*10) + "<br />"); 
+    resultEl.innerHTML = "";
     
 }
 
@@ -192,9 +247,36 @@ var viewHighScores = function() {
 
 
 
+var saveHighScore = function() {
+    
+    var highscore = {
+        initials: initialsInputEl.value,
+        score: gameScore + 1
+    }
+
+    localStorage.setItem("highscore", JSON.stringify(highscore));
+    viewHighScores();
+
+}
+
+
+
 var clearHighScores = function() {
 
-    alert("cliear high scores");
+    // resetHighScore();  
+    var highscore = {
+        initials: "",
+        score: 0
+    }
+    localStorage.setItem("highscore", JSON.stringify(highscore));
+    viewHighScores();
+}
+
+
+
+var goBack = function() {
+    
+    location.reload(false);
 
 }
 
@@ -216,7 +298,10 @@ var welcomeScreen = function() {
     btnStartQuizEl.style.display = "inline";
     btnGoBackEl.style.display = "none";
     btnClearHighScoresEl.style.display = "none";
+
 }
+
+
 
 // start of JavaScript non-function code
 
@@ -234,9 +319,11 @@ btnClearHighScoresEl.addEventListener("click", clearHighScores);
 
 
 // listen for go back button click
-btnGoBackEl.addEventListener("click", welcomeScreen);
+btnGoBackEl.addEventListener("click", goBack);
+
+// listen for highscore button click
+btnSaveHighScoreEl.addEventListener("click", saveHighScore );
 
 
-
-// loadGame();
+// Initial call to start quiz
 welcomeScreen();
