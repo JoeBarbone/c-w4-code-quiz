@@ -26,10 +26,12 @@ btnAnswer4El = document.querySelector("#answer-4");
 
 // initiate counters
 var counter = 60;
-selectedAnswer = 0;
+var selectedAnswer = 0;
 var i = 0;
 var WrongAnswers = 0;
 var gameScore = 0;
+var highscores = [];
+// var existingScores = [];
 
 
 // setup question object/array
@@ -204,18 +206,18 @@ var displayQuestion = function() {
 
 var endGame = function() {
     
-    var currentHighscore = JSON.parse(localStorage.getItem("highscore"));
+    var currentHighscores = JSON.parse(localStorage.getItem("highscore"));
     gameScore = counter - (WrongAnswers*10);
 
-    if (currentHighscore === null || gameScore > currentHighscore.score) {
+    
+    // if (currentHighscore === null || gameScore > currentHighscore.score) {
         initialsInputEl.style.display = "inline";
         btnSaveHighScoreEl.style.display = "inline";
-    } else {
-        btnGoBackEl.style.display = "block";
-    }
+    // } else {
+        // btnGoBackEl.style.display = "block";
+    // }
 
     headerEl.innerHTML = "Quiz Results";
-    // contentEl.innerHTML = "Remaining Time: " + counter + "<br />" + "Penalty Seconds: " + (WrongAnswers*10) + "<br />" + "Total score: " + (counter - (WrongAnswers*10) + "<br />" + "<input id='initials' placeholder='enter initials' /><button id='submit-highscore' class='button-highscore'>Submit</button>"); 
     contentEl.innerHTML = "Remaining Time: " + (counter + 1) + "<br />" + "Penalty Seconds: " + (WrongAnswers*10) + "<br />" + "Total score: " + ((counter + 1) - (WrongAnswers*10) + "<br />"); 
     resultEl.innerHTML = "";
     
@@ -234,28 +236,65 @@ var viewHighScores = function() {
     gameHeadingEl.appendChild(headerEl);
 
     // content assignment
-    var highscore = JSON.parse(localStorage.getItem("highscore"));
-    contentEl.innerHTML = highscore.initials + ": " + highscore.score;
-    gameContentEl.appendChild(contentEl);
+    highscores = localStorage.getItem("highscores");
 
+    // only if highscores exist
+    if (highscores) {
+        highscores = JSON.parse(highscores);
+        
+        for (var i=0; i < highscores.length; i++) {
+            contentEl.innerHTML = contentEl.innerHTML + (i+1) + ") " + highscores[i].initials + ": " + highscores[i].score + "<br />";
+        }
+    }   
     // result assignment
+
+    // contentEl.innerHTML = tempScore;
+    // gameContentEl.appendChild(contentEl);
+
     btnStartQuizEl.style.display = "none";
     btnGoBackEl.style.display = "inline";
     btnClearHighScoresEl.style.display = "inline";
-    
+
 }
 
 
 
 var saveHighScore = function() {
-    
-    var highscore = {
-        initials: initialsInputEl.value,
-        score: gameScore + 1
-    }
 
-    localStorage.setItem("highscore", JSON.stringify(highscore));
-    viewHighScores();
+    var holdArr = [];
+    highscores = localStorage.getItem("highscores");
+
+    // get existing highscores only if they exist, if not, create the highscore
+    if (highscores) {
+        highscores = JSON.parse(highscores);
+                
+        for (var i=0; i < highscores.length; i++) {
+            holdArr.push(highscores[i]);
+            console.log("holdArr: " + JSON.stringify(holdArr));
+        }
+        
+        var highscore = {
+            initials: initialsInputEl.value,
+            score: gameScore + 1
+        }
+
+        holdArr.push(highscore);
+        highscores = holdArr;
+        localStorage.setItem("highscores", JSON.stringify(highscores));
+    } else {
+        var highscore = {
+            initials: initialsInputEl.value,
+            score: gameScore + 1
+        }
+
+        holdArr.push(highscore);
+
+        highscores = holdArr;
+        
+        localStorage.setItem("highscores", JSON.stringify(highscores));
+        
+    }
+    viewHighScores();    
 
 }
 
@@ -268,8 +307,10 @@ var clearHighScores = function() {
         initials: "",
         score: 0
     }
-    localStorage.setItem("highscore", JSON.stringify(highscore));
+
+    localStorage.setItem("highscores", JSON.stringify(highscore));
     viewHighScores();
+
 }
 
 
@@ -283,6 +324,7 @@ var goBack = function() {
 
 
 var welcomeScreen = function() {
+    
     // var headerEl = document.createElement("div");
     
     headerEl.textContent = "Coding Quiz Challenge";
