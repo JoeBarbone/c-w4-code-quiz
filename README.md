@@ -29,9 +29,6 @@ Desktop main code quiz
 Desktop during code quiz
 ![during code quiz](images/screenshot-desktop-during.jpg)
 
-Desktop end quiz, not high score
-![code quiz end, not high score](images/screenshot-desktop-end-not-highscore.jpg)
-
 Desktop end quiz, with high score
 ![code quiz main screen](images/screenshot-desktop-end-highscore.jpg)
 
@@ -43,19 +40,22 @@ Desktop quiz high score
 Mobile main code quiz  
 ![mobile code quiz main screen](images/screenshot-mobile-main.jpg)  
 
-Desktop during code quiz  
-![mobile during code quiz](images/screenshot-mobile-during.jpg)  
+Mobile during code quiz  
+![mobile during code quiz](images/screenshot-mobile-during.jpg)    
 
-Desktop end quiz, not high score  
-![mobile code quiz end, not high score](images/screenshot-mobile-end-not-highscore.jpg)  
-
-Desktop end quiz, with high score  
+Mobile end quiz, with high score  
 ![mobile code quiz main screen](images/screenshot-mobile-end-highscore.jpg)  
 
-Desktop quiz high score  
+Mobile quiz high scores  
 ![mobile code quiz main screen](images/screenshot-mobile-highscore.jpg)  
 
 
 ## Live Site
 
 [Challenge Week 4 - Coding Quiz](https://joebarbone.github.io/c-w4-code-quiz/)
+
+---
+
+## Updates
+
+2022-05-16 Fixed highscores to reflex array
